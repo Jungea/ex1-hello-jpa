@@ -15,7 +15,7 @@ public class JpaMain {
         tx.begin();
 
         Member member = new Member();
-//        member.setId(1L);
+        member.setId(1L);
 //        member.setName("HelloA");
 
         em.persist(member);
