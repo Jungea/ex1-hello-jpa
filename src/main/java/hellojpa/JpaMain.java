@@ -16,28 +16,22 @@ public class JpaMain {
 
         try {
 
-            //회원 등록
-            Member member = new Member();
-            member.setId(2L);
-            member.setName("HelloB");
 
-            em.persist(member);
+            //1차 캐시
+//            example1(em);
 
-            // 회원 단 건 조회
-            Member findMember = em.find(Member.class, 1L);
-            System.out.println("findMember.id() = " + findMember.getId());
-            System.out.println("findMember.name() = " + findMember.getName());
+            //영속 엔티티의 동일성 보장
+//            example2(em);
 
-            // 회원 삭제
-            Member findMember1 = em.find(Member.class, 1L);
-            em.remove(findMember1);
+            //트랜잭션을 지원하는 쓰기 지연
+//            example3(em);
 
-            // 회원 수정
-            Member findMember2 = em.find(Member.class, 2L);
-            findMember2.setName("HelloJPA");
+            //변경 감지(Dirty Checking)
+            Member member = em.find(Member.class, 150L);
+            member.setName("ZZZZZZ");
 
+            System.out.println("======================");
             tx.commit();
-
         } catch (Exception e) {
             tx.rollback();
         } finally {
@@ -45,5 +39,34 @@ public class JpaMain {
         }
 
         emf.close();
+    }
+
+    private static void example3(EntityManager em) {
+        Member member1 = new Member(150L, "A");
+        Member member2 = new Member(160L, "B");
+
+        em.persist(member1);
+        em.persist(member2);
+
+        System.out.println("======================");
+    }
+
+    private static void example2(EntityManager em) {
+        Member findMember1 = em.find(Member.class, 101L);
+        Member findMember2 = em.find(Member.class, 101L);
+
+        System.out.println("findMember1 == findMember2 : " + (findMember1 == findMember2));
+    }
+
+    private static void example1(EntityManager em) {
+        Member member = new Member();
+        member.setId(101L);
+        member.setName("HelloJPA");
+
+        em.persist(member);
+
+        Member findMember = em.find(Member.class, 101L);
+        System.out.println("findMember.getId() = " + findMember.getId());
+        System.out.println("findMember.getName() = " + findMember.getName());
     }
 }
