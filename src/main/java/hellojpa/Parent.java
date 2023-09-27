@@ -13,12 +13,17 @@ public class Parent {
 
     private String name;
 
-    @OneToMany(mappedBy = "parent", /*cascade = CascadeType.PERSIST, */orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Child> childList = new ArrayList<>();
 
     public void addChild(Child child) {
         childList.add(child);
         child.setParent(this);
+    }
+
+    public void removeAt(int index) {
+        Child remove = childList.remove(index);
+        remove.setParent(null);
     }
 
     public Long getId() {
